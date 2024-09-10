@@ -29,7 +29,11 @@ public class ProdutoFacade {
         return this.produtoApplication.buscarTodos();
     }
 
-    public void iniciarMenu() {
+    public float vender(int id, int quantidade) {
+        return this.produtoApplication.vender(id, quantidade);
+    }
 
+    public void atualizarProduto(int id, Produto produto) {
+        this.produtoApplication.atualizarProduto(id, produto);
     }
 }

@@ -1,13 +1,15 @@
 package com.lanchenlayer.services;
 
 import com.lanchenlayer.entities.Produto;
-import com.lanchenlayer.repositories.ProdutoRepository;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 
 public class ProdutoService {
     private String caminhoDestino = "C:\\Users\\aluno\\LancheNLayer\\src\\main\\resources\\images\\";
@@ -28,51 +30,36 @@ public class ProdutoService {
                 Files.copy(path, pastaDestino, StandardCopyOption.REPLACE_EXISTING);
                 produto.setImagem(pastaDestino.getFileName().toString());
                 return true;
-            } catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        return false;
-    }
-
-
-    public boolean removerImagem(Produto produto) {
-        Path path = Paths.get(caminhoDestino + produto.getImagem());
-
-        if (Files.exists(path)) {
-            try {
-                Files.delete(path);
-                produto.setImagem(null); // Removendo a referência à imagem no produto
-                return true;
             } catch (Exception ex) {
                 return false;
             }
         }
 
-        return false; // Se a imagem não existir, retornar falso
-    }
-
-    // Novo método: Atualizar
-    public boolean atualizar(Produto produto, String novaDescricao, double novoPreco, String novaImagem) {
-        produto.setDescricao(novaDescricao);
-        produto.setPreco(novoPreco);
-
-        if (novaImagem != null && !novaImagem.isEmpty()) {
-
-            return salvarImagem(produto);
-        } else {
-            return true;
-        }
-    }
-
-    public boolean vender(int id, int quantidade) {
         return false;
     }
 
-    public void setProdutoRepository(ProdutoRepository produtoRepository) {
+    private String buscarCaminhoArquivoPorId(int id) {
+        File diretorio = new File(caminhoDestino);
+        File[] matches = diretorio.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.startsWith(String.valueOf(id));
+            }
+        });
+        return Arrays.stream(matches).findFirst().get().getAbsolutePath();
+    }
 
+    public void removerImagem(int id) {
+        Path path = Paths.get(buscarCaminhoArquivoPorId(id));
+
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void atualizarImagem(Produto produto) {
+        removerImagem(produto.getId());
+        salvarImagem(produto);
     }
 }
-

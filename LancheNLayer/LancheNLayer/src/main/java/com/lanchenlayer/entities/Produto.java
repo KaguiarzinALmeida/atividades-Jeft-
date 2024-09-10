@@ -13,10 +13,6 @@ public class Produto {
         this.imagem = imagem;
     }
 
-    public Produto(int id, String descricao, double preco, String imagem, int estoque) {
-
-    }
-
     public int getId() {
         return id;
     }
@@ -49,11 +45,7 @@ public class Produto {
         this.imagem = imagem;
     }
 
-    public void setPreco(double preco) {
-
-    }
-
-    public int getEstoque() {
-        return 0;
+    public float vender(int quantidade) {
+        return this.valor * quantidade;
     }
 }

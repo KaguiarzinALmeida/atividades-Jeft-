@@ -15,8 +15,12 @@ public class ProdutoRepository {
         produtos.removeIf(produto -> produto.getId() == id);
     }
 
+    private Produto filtrarProduto(int id) {
+        return produtos.stream().filter(p -> p.getId() == id).findFirst().get();
+    }
+
     public Produto buscarPorId(int id) {
-        Produto produtoInDb = produtos.stream().filter(p -> p.getId() == id).findFirst().get();
+        Produto produtoInDb = filtrarProduto(id);
 
         return produtoInDb;
     }
@@ -25,16 +29,11 @@ public class ProdutoRepository {
         return produtos;
     }
 
+    public void atualizarProduto(int id, Produto produto) {
+        Produto produtoInDb = filtrarProduto(id);
 
-    public void atualizar(int id, String novaDescricao, double novoPreco, String novaImagem) {
-        Produto produto = buscarPorId(id);
-        if (produto != null) {
-            produto.setDescricao(novaDescricao);
-            produto.setPreco(novoPreco);
-            produto.setImagem(novaImagem);
-        } else {
-            System.out.println("Produto não encontrado.");
-        }
+        produtoInDb.setDescricao(produto.getDescricao());
+        produtoInDb.setValor(produto.getValor());
+        produtoInDb.setImagem(produto.getImagem());
     }
-
 }
